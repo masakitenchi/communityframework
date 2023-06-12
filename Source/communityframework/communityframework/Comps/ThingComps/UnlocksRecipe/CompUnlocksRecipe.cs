@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RimWorld;
 using Verse;
+using HarmonyLib;
+using System.Reflection;
 
 namespace CF
 {
     class CompUnlocksRecipe : CompAffectedByFacilities
     {
-        public CompProperties_UnlocksRecipe Props
-        {
-            get
-            {
-                return (CompProperties_UnlocksRecipe)this.props;
-            }
-        }
+        public CompProperties_UnlocksRecipe Props => this.props as CompProperties_UnlocksRecipe;
 
-        public static void AddRecipe(Thing _facility, CompAffectedByFacilities _compAffectedByFacilities)
+        [Unsaved(false)]
+        public HashSet<RecipeDef> _currentlyUnlocked = new HashSet<RecipeDef>();
+
+        /*public static void AddRecipe(Thing _facility, CompAffectedByFacilities _compAffectedByFacilities)
         {
             if (_compAffectedByFacilities.parent.TryGetComp<CompUnlocksRecipe>() != null)
             {
@@ -61,15 +58,11 @@ namespace CF
                     {
                         _compAffectedByFacilities.parent.def.AllRecipes.Add(recipe);
                     }
-                    else
-                    {
-                        ULog.Warning($"the recipe {recipe.label} already exists for {_compAffectedByFacilities.parent.def.label}. Skipping... ");
-                    }
                 }
             }
-        }
+        }*/
 
-        public static void RemoveRecipe(Thing _facility, CompAffectedByFacilities _compAffectedByFacilities)
+        /*public static void RemoveRecipe(Thing _facility, CompAffectedByFacilities _compAffectedByFacilities)
         {
             if (_compAffectedByFacilities.parent.TryGetComp<CompUnlocksRecipe>() != null)
             {
@@ -116,6 +109,8 @@ namespace CF
 
 
             }
-        }
+        }*/
+
+
     }
 }
