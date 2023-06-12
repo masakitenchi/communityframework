@@ -79,15 +79,13 @@ namespace CF
             public static bool AvailablePostfix(RecipeDef __instance, ref bool __result, Thing thing, BodyPartRecord part = null)
             {
                 //Are there anything else that's not a worktable but has unlockable recipe?
-                if (typeof(Building_WorkTable).IsAssignableFrom(thing.GetType()))
-                {
-                    CompUnlocksRecipe comp = thing.TryGetComp<CompUnlocksRecipe>();
-                    //Redirect to vanilla if:
-                    // - comp is null;
-                    // - this recipe is not unlocked by this CompProperties
-                    if (comp == null || !comp.Props.linkableFacilities.Exists(x => x.recipes.Contains(__instance))) return true;
 
-                    __result = comp._currentlyUnlocked.Contains(__instance);
+                //Redirect to vanilla if:
+                // - comp is null;
+                // - this recipe is not unlocked by this CompProperties
+                if (thing.TryGetComp<CompUnlocksRecipe>()?._currentlyUnlocked.Contains(__instance) ?? false)
+                {
+                    __result = true;
                     return false;
                 }
                 return true;
