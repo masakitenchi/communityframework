@@ -12,6 +12,8 @@ namespace CF
     {
         public CompProperties_UnlocksRecipe Props => this.props as CompProperties_UnlocksRecipe;
 
+        //Had a hard time trying to save current state between save, so I guess this is the best I could achieve atm
+        //PostExposeDate works per se, but there are multiple methods that's calling Notify_LinkRemoved and Notify_NewLink and would mess with the log in a pretty bad way
         [Unsaved(false)]
         public HashSet<RecipeDef> _currentlyUnlocked = new HashSet<RecipeDef>();
 

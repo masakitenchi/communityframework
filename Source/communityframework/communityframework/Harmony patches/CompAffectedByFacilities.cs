@@ -48,7 +48,7 @@ namespace CF
             {
                 CompUnlocksRecipe comp = __instance.parent.TryGetComp<CompUnlocksRecipe>();
                 if (comp == null || !comp.Props.linkableFacilities.Exists(x => x.targetFacility == facility.def)) return;
-                Log.Message($"Adding recipes from {facility.def.defName} for {__instance.parent.def.defName}");
+                //Log.Message($"Adding recipes from {facility.def.defName} for {__instance.parent.def.defName}");
                 //comp._currentlyUnlocked.AddRange(comp.Props.linkableFacilities.Find(x => x.targetFacility == facility.def)?.recipes);
                 foreach (var thing in comp.Props.linkableFacilities)
                     foreach (var recipe in thing.recipes)
@@ -62,7 +62,7 @@ namespace CF
             {
                 CompUnlocksRecipe comp = __instance.parent.TryGetComp<CompUnlocksRecipe>();
                 if (comp == null || !comp.Props.linkableFacilities.Exists(x => x.targetFacility == thing.def)) return;
-                Log.Message($"Removing recipes from {thing.def.defName} for {__instance.parent.def.defName}");
+                //Log.Message($"Removing recipes from {thing.def.defName} for {__instance.parent.def.defName}");
                 //Iterate through each facility that unlocks recipes, remove all recipes that's missing its facility
                 foreach (var facility in comp.Props.linkableFacilities)
                     foreach (var recipe in facility.recipes)
@@ -83,8 +83,8 @@ namespace CF
                 {
                     CompUnlocksRecipe comp = thing.TryGetComp<CompUnlocksRecipe>();
                     //Redirect to vanilla if:
-                    // comp is null;
-                    // this recipe is not unlocked by this CompProperties
+                    // - comp is null;
+                    // - this recipe is not unlocked by this CompProperties
                     if (comp == null || !comp.Props.linkableFacilities.Exists(x => x.recipes.Contains(__instance))) return true;
 
                     __result = comp._currentlyUnlocked.Contains(__instance);

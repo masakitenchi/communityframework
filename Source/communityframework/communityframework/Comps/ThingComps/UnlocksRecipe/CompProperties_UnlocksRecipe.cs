@@ -32,6 +32,7 @@ namespace CF
         public List<LinkableFacilities> linkableFacilities = new List<LinkableFacilities>(); // Which facilities should be targeted
 
 
+        //Not sure if I should do this, but in case someone doesn't add the recipedef to the worktable
         public override void ResolveReferences(ThingDef parentDef)
         {
             base.ResolveReferences(parentDef);
@@ -41,6 +42,8 @@ namespace CF
                 parentDef.AllRecipes.AddRange(item.recipes);
             }
         }
+
+        //Currently this only supports different recipes on different buildings
         public override IEnumerable<string> ConfigErrors(ThingDef parentDef)
         {
             HashSet<RecipeDef> recipes = new HashSet<RecipeDef>();
@@ -49,7 +52,7 @@ namespace CF
                 foreach(var recipe in item.recipes)
                 {
                     if (!recipes.Add(recipe))
-                        yield return $"Error when adding recipe to {parentDef}: "+ "trying to add same unlockable recipe twice: " + recipe.defName;
+                        yield return $"UnlockRecipeError: "+ "trying to add same unlockable recipe twice: " + recipe.defName;
                 }
             }
         }
