@@ -70,25 +70,27 @@ namespace CF
             }
         }
 
+
+        /* The whole stacktrace:
+         * ITab_Bills.FillTab() -> delegate that checks SelTable.def.AllRecipes[i].AvailableNow && SelTable.def.AllRecipes[i].AvailableOnNow(SelTable)
+         * So first we need to add all unlockable recipes to the building's def
+         * Then we can patch RecipeDef.AvailableOnNow(SelTable) to check if this recipe is unlocked through CompProperties_UnlocksRecipe
+         * In conclusion, we need to check the building has CompUnlocksRecipe first, then check if this recipe is in its CompProperties_UnlocksRecipe (no matter which building unlocks it)
+         */
         [HarmonyPatch]
         public static class Patch_RecipeDef
         {
             [HarmonyPatch(typeof(RecipeDef), nameof(RecipeDef.AvailableOnNow))]
             [HarmonyPrefix]
-            //Only change the result to false when: (This recipe is in comp.recipes and currently is not in _currentlyUnlocked
-            public static bool AvailablePostfix(RecipeDef __instance, ref bool __result, Thing thing, BodyPartRecord part = null)
+            public static bool AvailablePrefix(RecipeDef __instance, ref bool __result, Thing thing, BodyPartRecord part = null)
             {
-                //Are there anything else that's not a worktable but has unlockable recipe?
-
                 //Redirect to vanilla if:
                 // - comp is null;
                 // - this recipe is not unlocked by this CompProperties
-                if (thing.TryGetComp<CompUnlocksRecipe>()?._currentlyUnlocked.Contains(__instance) ?? false)
-                {
-                    __result = true;
-                    return false;
-                }
-                return true;
+                CompUnlocksRecipe comp = thing.TryGetComp<CompUnlocksRecipe>();
+                if (comp is null || !comp.Props.linkableFacilities.Any(x => x.recipes.Contains(__instance))) return true;
+                __result = comp._currentlyUnlocked.Contains(__instance);
+                return false;
             }
         }
     }
