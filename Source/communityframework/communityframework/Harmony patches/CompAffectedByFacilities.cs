@@ -45,9 +45,7 @@ namespace CF
                 if (comp == null || !comp.Props.linkableFacilities.Exists(x => x.targetFacility == facility.def)) return;
                 //Log.Message($"Adding recipes from {facility.def.defName} for {__instance.parent.def.defName}");
                 //comp._currentlyUnlocked.AddRange(comp.Props.linkableFacilities.Find(x => x.targetFacility == facility.def)?.recipes);
-                foreach (var thing in comp.Props.linkableFacilities)
-                    foreach (var recipe in thing.recipes)
-                        comp._currentlyUnlocked.Add(recipe);
+                comp._currentlyUnlocked.AddRange(comp.Props.linkableFacilities.Find(x => x.targetFacility == facility.def).recipes);
             }
 
             //Checks if the facility has CompUnlocksRecipe, and update its recipe according to new links
@@ -59,9 +57,7 @@ namespace CF
                 if (comp == null || !comp.Props.linkableFacilities.Exists(x => x.targetFacility == thing.def)) return;
                 //Log.Message($"Removing recipes from {thing.def.defName} for {__instance.parent.def.defName}");
                 //Iterate through each facility that unlocks recipes, remove all recipes that's missing its facility
-                foreach (var facility in comp.Props.linkableFacilities)
-                    foreach (var recipe in facility.recipes)
-                        comp._currentlyUnlocked.Remove(recipe);
+                comp._currentlyUnlocked.RemoveWhere(x => comp.Props.linkableFacilities.Find(x => x.targetFacility == thing.def).recipes.Contains(x));
             }
         }
 
