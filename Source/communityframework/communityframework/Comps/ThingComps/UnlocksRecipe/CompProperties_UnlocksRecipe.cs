@@ -36,21 +36,24 @@ namespace CF
         public override void ResolveReferences(ThingDef parentDef)
         {
             base.ResolveReferences(parentDef);
-            foreach(var item in linkableFacilities)
+            for (int i = 0; i < linkableFacilities.Count; i++)
             {
-                ULog.Message($"Adding reciped into {item.targetFacility.defName}");
+                LinkableFacilities item = linkableFacilities[i];
+                ULog.Message($"Adding recipe into {item.targetFacility.defName}");
                 parentDef.AllRecipes.AddRange(item.recipes);
             }
         }
 
-        //Currently this only supports different recipes on different buildings
+        //Currently unlockable recipes should be identical (Cannot have different buildings unlock the same recipe, or multiple buildings are required for one recipe)
         public override IEnumerable<string> ConfigErrors(ThingDef parentDef)
         {
             HashSet<RecipeDef> recipes = new HashSet<RecipeDef>();
-            foreach(var item in linkableFacilities)
+            for (int i = 0; i < linkableFacilities.Count; i++)
             {
-                foreach(var recipe in item.recipes)
+                LinkableFacilities item = linkableFacilities[i];
+                for (int j = 0; j < item.recipes.Count; j++)
                 {
+                    RecipeDef recipe = item.recipes[j];
                     if (!recipes.Add(recipe))
                         yield return $"UnlockRecipeError: "+ "trying to add same unlockable recipe twice: " + recipe.defName;
                 }
