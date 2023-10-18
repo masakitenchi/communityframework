@@ -37,6 +37,11 @@ namespace CF
         {
 
             //Checks if the facility has CompUnlocksRecipe, and update its recipe according to new links
+            /// <summary>
+            /// Search for the same def of added thing in its linkableFacilities, and add all recipes unlocked by it
+            /// </summary>
+            /// <param name="facility">The facility that gets added as a link</param>
+            /// <param name="__instance">the comp instance of the main building</param>
             [HarmonyPatch(typeof(CompAffectedByFacilities), nameof(CompAffectedByFacilities.Notify_NewLink))]
             [HarmonyPostfix]
             public static void AddRecipe(Thing facility, CompAffectedByFacilities __instance)
@@ -49,6 +54,11 @@ namespace CF
             }
 
             //Checks if the facility has CompUnlocksRecipe, and update its recipe according to new links
+            /// <summary>
+            /// Search for the same def of removed thing in its linkableFacilities, and remove all recipes unlocked by it
+            /// </summary>
+            /// <param name="thing">The thing gives link that gets removed</param>
+            /// <param name="__instance">the comp instance of the main building</param>
             [HarmonyPatch(typeof(CompAffectedByFacilities), nameof(CompAffectedByFacilities.Notify_LinkRemoved))]
             [HarmonyPostfix]
             public static void RemoveRecipe(Thing thing, CompAffectedByFacilities __instance)
